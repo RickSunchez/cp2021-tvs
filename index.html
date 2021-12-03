@@ -1,0 +1,51 @@
+<div class="Auth-container">
+    <div>
+        <input type="text" name="username" value="medvedeva">
+    </div>
+    <div>
+        <input type="password" name="password" value="Soi2eic7ki"></div>
+    <div><button id="GO">Go!</button></div>
+</div>
+<script>
+    document
+        .querySelector("#GO")
+        .addEventListener("click", (ev)=>{
+            let usr = document
+                .querySelector(".Auth-container input[name=username]")
+                .value;
+            let pwd = document
+                .querySelector(".Auth-container input[name=password]")
+                .value;
+
+            var formData = new FormData();
+            formData.append("username", usr);
+            formData.append("password", pwd);
+
+            fetch("./php/access_token.php", {
+                method: "POST",
+                body: formData
+            })
+                .then(resp => resp.text())
+                .then(answ => {
+                    if (answ == "Smthg missing") {
+                        console.log("Hurma")
+                    } else {
+                        get_user_data(answ)
+                    }
+                })
+        })
+
+    function get_user_data(at) {
+        var formData = new FormData();
+        formData.append("access_token", at);
+
+        fetch("./php/userinfo.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(resp => resp.json())
+        .then(answ => {
+            console.log(answ)
+        })
+    }
+</script>
